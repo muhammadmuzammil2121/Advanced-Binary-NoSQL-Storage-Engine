@@ -13,7 +13,6 @@ size_t ProfessionalEngine::getHash(const std::string& key) const {
     return hash;
 }
 
-// Hard Drive par data permanently likhne ke liye (Write-Ahead Log)
 void ProfessionalEngine::appendToWAL(const std::string& command, const std::string& key, const std::string& value, int ttl) {
     std::ofstream file(logFileName, std::ios::app);
     if (file.is_open()) {
@@ -21,7 +20,7 @@ void ProfessionalEngine::appendToWAL(const std::string& command, const std::stri
     }
 }
 
-// SET Command ki coding
+// SET Command 
 void ProfessionalEngine::put(const std::string& key, const std::string& value, int ttlSeconds, bool triggerWAL) {
     size_t index = getHash(key);
     HashNode* entry = buckets[index].get();
@@ -46,16 +45,15 @@ void ProfessionalEngine::put(const std::string& key, const std::string& value, i
     if (triggerWAL) appendToWAL("SET", key, value, ttlSeconds);
 }
 
-// GET Command ki coding (With Auto-Expiry Check)
+// GET Command  coding (With Auto-Expiry Check)
 bool ProfessionalEngine::get(const std::string& key, std::string& value) {
     size_t index = getHash(key);
     HashNode* entry = buckets[index].get();
 
     while (entry != nullptr) {
         if (entry->key == key) {
-            // Check agar key expire ho chuki hai
             if (entry->hasTTL && std::time(nullptr) >= entry->expiryTime) {
-                remove(key, true); // Memory aur file dono se delete kardo
+                remove(key, true); 
                 return false;
             }
             value = entry->value;
@@ -66,7 +64,7 @@ bool ProfessionalEngine::get(const std::string& key, std::string& value) {
     return false;
 }
 
-// DEL Command ki coding
+// DEL Command  coding
 bool ProfessionalEngine::remove(const std::string& key, bool triggerWAL) {
     size_t index = getHash(key);
     HashNode* entry = buckets[index].get();
@@ -88,7 +86,7 @@ bool ProfessionalEngine::remove(const std::string& key, bool triggerWAL) {
     return false;
 }
 
-// Hard Drive se data wapis RAM me load karne ka function
+// Hard Drive to data in RAM loading
 void ProfessionalEngine::loadFromWAL() {
     std::ifstream file(logFileName);
     if (!file.is_open()) return;
@@ -103,7 +101,7 @@ void ProfessionalEngine::loadFromWAL() {
         if (value == "_") value = "";
 
         if (command == "SET") {
-            put(key, value, ttl, false); // false taake file me dobara double entry na ho
+            put(key, value, ttl, false);
             loadedCount++;
         } else if (command == "DEL") {
             remove(key, false);
