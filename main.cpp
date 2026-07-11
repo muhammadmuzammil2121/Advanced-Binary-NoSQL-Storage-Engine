@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sstream>
-#include "Engine.cpp" // Kyunki file barabar me hai, ab rasta likhne ki zaroorat nahi!
+#include "Engine.cpp" 
 
 int main() {
     ProfessionalEngine db;
@@ -8,7 +8,7 @@ int main() {
     std::cout << "========================================================\n";
     std::cout << "  ?? ENTERPRISE IN-MEMORY DATA ENGINE v2.0 (STABLE) \n";
     std::cout << "========================================================\n";
-    db.loadFromWAL(); // Purana data disk se recover karo
+    db.loadFromWAL();
     std::cout << "Commands:\n"
               << "  SET <key> <val> [ttl_seconds]\n"
               << "  GET <key>\n"
