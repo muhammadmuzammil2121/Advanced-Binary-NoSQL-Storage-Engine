@@ -5,13 +5,11 @@
 #include <memory>
 #include <vector>
 #include <ctime>
-
-// Node jo data aur uski expiry time store karega
 class HashNode {
 public:
     std::string key;
     std::string value;
-    std::time_t expiryTime; // TTL feature ke liye
+    std::time_t expiryTime; 
     bool hasTTL;
     std::unique_ptr<HashNode> next;
 
